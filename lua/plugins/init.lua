@@ -5,7 +5,7 @@
 -- so this list is explicit rather than auto-globbed.
 
 -- require('plugins.colorscheme')
--- require('plugins.treesitter')
+require('plugins.treesitter')
 -- require('plugins.lsp')
 -- require('plugins.completion')
 -- require('plugins.telescope')
