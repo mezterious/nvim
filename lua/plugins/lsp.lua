@@ -30,6 +30,11 @@ require('mason').setup()
 -- To add a language: add an entry here, add a matching lsp/<name>.lua.
 local servers = {
   { name = 'lua_ls', mason = 'lua-language-server' },
+  -- TypeScript/JavaScript/Vue: vtsls does the TS side (incl. inside .vue
+  -- <script> blocks); vue_ls does the Vue template/style side and forwards
+  -- TS requests to vtsls. See lsp/vtsls.lua and lsp/vue_ls.lua.
+  { name = 'vtsls', mason = 'vtsls' },
+  { name = 'vue_ls', mason = 'vue-language-server' },
 }
 
 do

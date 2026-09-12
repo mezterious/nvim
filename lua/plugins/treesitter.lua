@@ -31,6 +31,7 @@ require('nvim-treesitter').install({
   'typescript',
   'vim',
   'vimdoc',
+  'vue',
   'yaml',
 })
 
