@@ -17,14 +17,14 @@ map('v', 'J', ":m '>+1<CR>gv=gv", { desc = 'Move selection down' })
 map('v', 'K', ":m '<-2<CR>gv=gv", { desc = 'Move selection up' })
 
 -- Keep cursor centred when jumping half-pages or between search results.
-map('n', '<C-d>', '<C-d>zz')
-map('n', '<C-u>', '<C-u>zz')
-map('n', 'n', 'nzzzv')
-map('n', 'N', 'Nzzzv')
+map('n', '<C-d>', '<C-d>zz', { desc = 'Scroll down, keep cursor centred' })
+map('n', '<C-u>', '<C-u>zz', { desc = 'Scroll up, keep cursor centred' })
+map('n', 'n', 'nzzzv', { desc = 'Next search match, keep cursor centred' })
+map('n', 'N', 'Nzzzv', { desc = 'Previous search match, keep cursor centred' })
 
 -- Keep the yanked text in the default register when pasting over a
 -- visual selection (instead of it being replaced by the deleted text).
-map('v', 'p', '"_dP')
+map('v', 'p', '"_dP', { desc = 'Paste without overwriting the unnamed register' })
 
 -- Diagnostics (LSP attaches its own keymaps on `LspAttach`; these are
 -- always available since diagnostics work without an active server too).
