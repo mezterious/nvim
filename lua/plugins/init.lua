@@ -6,7 +6,7 @@
 
 -- require('plugins.colorscheme')
 require('plugins.treesitter')
--- require('plugins.lsp')
+require('plugins.lsp')
 -- require('plugins.completion')
 -- require('plugins.telescope')
 -- require('plugins.gitsigns')
