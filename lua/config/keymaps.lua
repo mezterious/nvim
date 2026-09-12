@@ -28,6 +28,16 @@ map('v', 'p', '"_dP')
 
 -- Diagnostics (LSP attaches its own keymaps on `LspAttach`; these are
 -- always available since diagnostics work without an active server too).
-map('n', '[d', vim.diagnostic.goto_prev, { desc = 'Previous diagnostic' })
-map('n', ']d', vim.diagnostic.goto_next, { desc = 'Next diagnostic' })
+-- goto_prev()/goto_next() are deprecated in favor of the unified jump();
+-- on_jump replicates their old "float the diagnostic at the new position"
+-- default (opts.float does too, but that shortcut is itself deprecated).
+local function float_on_jump(_, bufnr)
+  vim.diagnostic.open_float({ bufnr = bufnr, scope = 'cursor', focus = false })
+end
+map('n', '[d', function()
+  vim.diagnostic.jump({ count = -1, on_jump = float_on_jump })
+end, { desc = 'Previous diagnostic' })
+map('n', ']d', function()
+  vim.diagnostic.jump({ count = 1, on_jump = float_on_jump })
+end, { desc = 'Next diagnostic' })
 map('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic' })
