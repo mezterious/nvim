@@ -7,7 +7,15 @@ return {
   root_markers = { '.luarc.json', '.luarc.jsonc', '.git' },
   settings = {
     Lua = {
-      runtime = { version = 'LuaJIT' },
+      runtime = {
+        version = 'LuaJIT',
+        -- Mirror how Neovim actually resolves require(): only via a `lua/`
+        -- directory. lua_ls's default (`?.lua`, matched at any depth) makes
+        -- require('which-key') resolve to our own lua/plugins/which-key.lua
+        -- instead of the plugin, purely because the file names collide.
+        path = { 'lua/?.lua', 'lua/?/init.lua' },
+        pathStrict = true,
+      },
       diagnostics = { globals = { 'vim' } },
       workspace = {
         -- Know about Neovim's own runtime Lua (vim.*, vim.fn.*, ...) so

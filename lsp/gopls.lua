@@ -50,7 +50,11 @@ end
 
 return {
   cmd = { 'gopls' },
-  filetypes = { 'go', 'gomod', 'gowork', 'gotmpl' },
+  -- Upstream also lists 'gotmpl', but Neovim 0.12 never assigns that
+  -- filetype (no detection, no runtime files) -- `:checkhealth vim.lsp`
+  -- flags it as unknown. Add it back alongside a vim.filetype.add() rule
+  -- if you ever want gopls on Go template files.
+  filetypes = { 'go', 'gomod', 'gowork' },
   root_dir = function(bufnr, on_dir)
     local fname = vim.api.nvim_buf_get_name(bufnr)
     get_mod_cache_dir()
