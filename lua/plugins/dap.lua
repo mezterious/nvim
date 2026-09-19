@@ -1,19 +1,25 @@
--- Debugging: nvim-dap (the DAP client), nvim-dap-ui (panels: variables,
--- breakpoints, call stack, watches, REPL), nvim-dap-virtual-text (inline
--- values), and a TypeScript/JavaScript adapter.
+-- Debugging: nvim-dap (the DAP client, language-agnostic), nvim-dap-ui
+-- (panels: variables, breakpoints, call stack, watches, REPL), and
+-- nvim-dap-virtual-text (inline values) -- all generic infrastructure.
+-- Everything language-specific is just an `adapter` + `configurations`
+-- entry per language, added further down.
 --
--- For the adapter: the well-known community glue plugin for this
--- (mxsdev/nvim-dap-vscode-js) hasn't been touched since March 2023, so
--- this hand-rolls the adapter definition instead -- nvim-dap already
--- supports exactly this case natively (:h dap-adapter, `server` type with
--- `port = "${port}"` to auto-pick one and an `executable` to auto-spawn
--- it), and mason's `js-debug-adapter` package already wraps Microsoft's
--- vscode-js-debug as a single launchable command. No glue needed.
+-- Two ways an adapter gets wired up here:
+--   - mason-nvim-dap (for codelldb/delve): it has real, current handlers
+--     for these, auto-generating the adapter table from whatever's in
+--     `ensure_installed`.
+--   - hand-rolled (for js-debug-adapter and Ruby's rdbg): mason-nvim-dap
+--     has no working handler for the modern vscode-js-debug setup (only a
+--     legacy one), and none at all for Ruby, so those use nvim-dap's own
+--     native `server` + `executable` + `port = "${port}"` adapter shape
+--     directly (:h dap-adapter) -- the same mechanism mason-nvim-dap's
+--     handlers use internally, just written out.
 vim.pack.add({
   'https://github.com/mfussenegger/nvim-dap',
   'https://github.com/nvim-neotest/nvim-nio', -- required by nvim-dap-ui
   'https://github.com/rcarriga/nvim-dap-ui',
   'https://github.com/theHamsta/nvim-dap-virtual-text',
+  'https://github.com/jay-babu/mason-nvim-dap.nvim',
 })
 
 do
@@ -25,6 +31,16 @@ do
     end
   end)
 end
+
+-- codelldb (Rust/C/C++) and delve (Go): real mason-nvim-dap handlers exist
+-- for both, so `handlers = {}` is enough to get adapters + sensible
+-- default configurations (including a "debug test" mode for delve) for
+-- free -- see mason-nvim-dap's mappings/adapters and mappings/configurations
+-- if you want to see exactly what that generates.
+require('mason-nvim-dap').setup({
+  ensure_installed = { 'codelldb', 'delve' },
+  handlers = {},
+})
 
 local dap = require('dap')
 local dapui = require('dapui')
@@ -97,8 +113,62 @@ for _, language in ipairs({ 'typescript', 'javascript', 'typescriptreact', 'java
       processId = require('dap.utils').pick_process,
       cwd = '${workspaceFolder}',
     },
+    {
+      -- Runs Vitest's own CLI entry point under node, same adapter as
+      -- above -- a Vitest run is just a node process, nothing Vitest- or
+      -- Vite-specific about the adapter itself. Debugs the currently open
+      -- test file in `run` mode (one pass, not watch) so the session has
+      -- a clear end rather than staying alive indefinitely.
+      type = 'pwa-node',
+      request = 'launch',
+      name = 'Debug Vitest tests (current file)',
+      runtimeExecutable = 'node',
+      runtimeArgs = { './node_modules/vitest/vitest.mjs', 'run', '${file}' },
+      rootPath = '${workspaceFolder}',
+      cwd = '${workspaceFolder}',
+      console = 'integratedTerminal',
+      internalConsoleOptions = 'neverOpen',
+    },
   }
 end
+
+-- Ruby, via rdbg (the `debug` gem's CLI, bundled with modern Ruby -- no
+-- separate install). `--open=vscode` is the part that's easy to miss:
+-- plain `--open` speaks rdbg's own console protocol, not DAP, and would
+-- silently fail to connect. Two variants because whether a project needs
+-- `bundle exec` to load the right gems isn't something this config can
+-- know either way.
+local function rdbg_adapter(callback, config)
+  callback({
+    type = 'server',
+    host = '127.0.0.1',
+    port = '${port}',
+    executable = {
+      command = 'rdbg',
+      args = { '--open=vscode', '--port', '${port}', config.program },
+    },
+  })
+end
+
+local function rdbg_bundler_adapter(callback, config)
+  callback({
+    type = 'server',
+    host = '127.0.0.1',
+    port = '${port}',
+    executable = {
+      command = 'rdbg',
+      args = { '--open=vscode', '--port', '${port}', '-c', '--', 'bundle', 'exec', 'ruby', config.program },
+    },
+  })
+end
+
+dap.adapters.ruby = rdbg_adapter
+dap.adapters.ruby_bundler = rdbg_bundler_adapter
+
+dap.configurations.ruby = {
+  { type = 'ruby', name = 'Launch file', request = 'launch', program = '${file}' },
+  { type = 'ruby_bundler', name = 'Launch file (via bundle exec)', request = 'launch', program = '${file}' },
+}
 
 local map = vim.keymap.set
 
@@ -109,6 +179,11 @@ map('n', '<F9>', dap.toggle_breakpoint, { desc = 'Debug: toggle breakpoint' })
 map('n', '<F10>', dap.step_over, { desc = 'Debug: step over' })
 map('n', '<F11>', dap.step_into, { desc = 'Debug: step into' })
 
+-- Leader-key twins of F5/F10/F11: macOS often intercepts bare F-keys for
+-- media/system functions unless fn is held.
+map('n', '<leader>dc', dap.continue, { desc = 'Continue/start' })
+map('n', '<leader>dn', dap.step_over, { desc = 'Step over (next)' })
+map('n', '<leader>di', dap.step_into, { desc = 'Step into' })
 map('n', '<leader>do', dap.step_out, { desc = 'Step out' })
 map('n', '<leader>db', dap.toggle_breakpoint, { desc = 'Toggle breakpoint' })
 map('n', '<leader>dB', function()

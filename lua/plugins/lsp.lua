@@ -27,6 +27,9 @@ require('mason').setup()
 -- Servers to make available. `name` is the config name used by
 -- vim.lsp.enable() (and the matching lsp/<name>.lua file); `mason` is the
 -- package name in Mason's registry, which is often spelled differently.
+-- `mason` is left nil for servers better installed by their own language
+-- toolchain instead (see rust_analyzer below) -- those are just skipped
+-- by the install loop, not mason-managed at all.
 -- To add a language: add an entry here, add a matching lsp/<name>.lua.
 local servers = {
   { name = 'lua_ls', mason = 'lua-language-server' },
@@ -35,15 +38,22 @@ local servers = {
   -- TS requests to vtsls. See lsp/vtsls.lua and lsp/vue_ls.lua.
   { name = 'vtsls', mason = 'vtsls' },
   { name = 'vue_ls', mason = 'vue-language-server' },
+  -- Not mason-managed: rustup already provides rust-analyzer, matched to
+  -- the active toolchain version. See lsp/rust_analyzer.lua.
+  { name = 'rust_analyzer' },
+  { name = 'gopls', mason = 'gopls' },
+  { name = 'ruby_lsp', mason = 'ruby-lsp' },
 }
 
 do
   local registry = require('mason-registry')
   registry.refresh(function()
     for _, server in ipairs(servers) do
-      local ok, pkg = pcall(registry.get_package, server.mason)
-      if ok and not pkg:is_installed() then
-        pkg:install()
+      if server.mason then
+        local ok, pkg = pcall(registry.get_package, server.mason)
+        if ok and not pkg:is_installed() then
+          pkg:install()
+        end
       end
     end
   end)
