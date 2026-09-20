@@ -80,9 +80,8 @@ vim.api.nvim_create_autocmd('LspAttach', {
 
     map('n', 'gd', vim.lsp.buf.definition, 'Go to definition')
     map('n', 'gD', vim.lsp.buf.declaration, 'Go to declaration')
-    map({ 'n', 'v' }, '<leader>lf', function()
-      vim.lsp.buf.format({ async = true })
-    end, 'Format buffer')
+    -- Formatting (<leader>lf) lives in plugins/formatting.lua: conform.nvim
+    -- calls the LSP formatter itself when a filetype has no dedicated one.
 
     if client and client:supports_method('textDocument/inlayHint') then
       vim.lsp.inlay_hint.enable(true, { bufnr = event.buf })

@@ -9,10 +9,13 @@
 -- the latest 1.x release *tag* rather than tracking a branch -- being on an
 -- actual tag is also what makes blink download its prebuilt fuzzy-matcher
 -- binary instead of requiring a Rust toolchain to build one.
+--
+-- '^1.0.0' = any 1.x release. (A bare '1.0' looks similar but means 1.0.x
+-- only, which silently held this at v1.0.0 while 1.10 was current.)
 vim.pack.add({
   {
     src = 'https://github.com/Saghen/blink.cmp',
-    version = vim.version.range('1.0'),
+    version = vim.version.range('^1.0.0'),
   },
   -- Snippet data only (JSON, no runtime logic) for blink's snippet source,
   -- which loads it automatically via Neovim's native vim.snippet engine.
