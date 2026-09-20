@@ -15,6 +15,7 @@ vim.pack.add({
 require('nvim-treesitter').install({
   'bash',
   'c',
+  'css',
   'diff',
   'go',
   'html',
@@ -37,14 +38,26 @@ require('nvim-treesitter').install({
   'yaml',
 })
 
--- Start highlighting (and, experimentally, indent) for any filetype that
--- has a parser available. Filetypes with no parser just silently no-op.
+-- One FileType autocmd enables tree-sitter per buffer, guarded so it only
+-- does what each language supports:
+--   - highlighting, if a parser is installed for the filetype;
+--   - tree-sitter indent (experimental upstream), only if the language ships an
+--     `indents` query. Go, Vim script and diff don't -- forcing it there left
+--     Enter after `{` at column 0 -- so they keep Neovim's own indent script.
+-- An autocmd rather than ftplugin/ files on purpose: for `indentexpr`, a
+-- config-dir ftplugin (even after/ftplugin) loses to the runtime's indent
+-- script, so only a FileType autocmd reliably sets it.
 vim.api.nvim_create_autocmd('FileType', {
   group = vim.api.nvim_create_augroup('treesitter-start', { clear = true }),
-  callback = function()
-    local ok = pcall(vim.treesitter.start)
-    if ok then
-      vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+  callback = function(event)
+    local lang = vim.treesitter.language.get_lang(event.match)
+    if not (lang and vim.treesitter.language.add(lang)) then
+      return
+    end
+
+    vim.treesitter.start(event.buf, lang)
+    if vim.treesitter.query.get(lang, 'indents') then
+      vim.bo[event.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
     end
   end,
 })
