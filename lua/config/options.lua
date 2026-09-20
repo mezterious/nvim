@@ -2,13 +2,6 @@
 -- scan, and this is the file to skim when you forget "why did I set that".
 local opt = vim.opt
 
--- Remote-plugin providers. Nothing in this config uses them, so turn them
--- off rather than have `:checkhealth` warn about hosts we don't need.
--- (Re-enable one by deleting it here if a plugin ever asks for it.)
-for _, provider in ipairs({ 'python3', 'ruby', 'perl', 'node' }) do
-  vim.g['loaded_' .. provider .. '_provider'] = 0
-end
-
 -- UI
 opt.number = true
 opt.relativenumber = true

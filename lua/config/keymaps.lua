@@ -26,18 +26,7 @@ map('n', 'N', 'Nzzzv', { desc = 'Previous search match, keep cursor centred' })
 -- visual selection (instead of it being replaced by the deleted text).
 map('v', 'p', '"_dP', { desc = 'Paste without overwriting the unnamed register' })
 
--- Diagnostics (LSP attaches its own keymaps on `LspAttach`; these are
--- always available since diagnostics work without an active server too).
--- goto_prev()/goto_next() are deprecated in favor of the unified jump();
--- on_jump replicates their old "float the diagnostic at the new position"
--- default (opts.float does too, but that shortcut is itself deprecated).
-local function float_on_jump(_, bufnr)
-  vim.diagnostic.open_float({ bufnr = bufnr, scope = 'cursor', focus = false })
-end
-map('n', '[d', function()
-  vim.diagnostic.jump({ count = -1, on_jump = float_on_jump })
-end, { desc = 'Previous diagnostic' })
-map('n', ']d', function()
-  vim.diagnostic.jump({ count = 1, on_jump = float_on_jump })
-end, { desc = 'Next diagnostic' })
+-- Diagnostics. Jumping needs no mapping here: Neovim's built-in `]d` / `[d`
+-- (and `]D` / `[D` for last/first) are used as-is. What's displayed for the
+-- current line is configured in plugins/lsp.lua (`virtual_lines`).
 map('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic' })

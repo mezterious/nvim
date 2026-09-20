@@ -63,11 +63,16 @@ vim.lsp.enable(vim.tbl_map(function(server)
   return server.name
 end, servers))
 
--- Diagnostics are on by default; this just tunes presentation.
+-- Diagnostics: a gutter sign for every problem (signs are on by default), and
+-- the message text only for the line the cursor is on -- so files stay clean
+-- and moving onto a marked line (or jumping there with the built-in `]d` /
+-- `[d`) shows its message. No end-of-line text, and nothing is hidden for
+-- the other diagnostics, unlike showing a single one via `on_jump`.
 vim.diagnostic.config({
   severity_sort = true,
   float = { border = 'rounded', source = true },
-  virtual_text = { spacing = 2, prefix = '●' },
+  virtual_text = false,
+  virtual_lines = { current_line = true },
 })
 
 vim.api.nvim_create_autocmd('LspAttach', {
