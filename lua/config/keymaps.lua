@@ -1,5 +1,13 @@
 -- Core keymaps only. Plugin-specific keymaps live next to that plugin's
 -- config in lua/plugins/, so this file stays readable as "the base layer".
+
+-- The leader lives here, next to the mappings that use it. Neovim reads it at
+-- the moment each mapping is defined, so this file must load before anything
+-- else that creates a <leader> mapping -- init.lua loads it first, and every
+-- plugin file runs after.
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ' '
+
 local map = vim.keymap.set
 
 -- Clear search highlight without losing search history (Esc alone in normal

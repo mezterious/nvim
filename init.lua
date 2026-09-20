@@ -1,12 +1,10 @@
--- Entry point. Order matters here:
---   1. Leader keys, because keymaps and plugin configs reference `<leader>`
---      and must be set before anything else uses them.
---   2. Core config (options/keymaps/autocmds) — no plugin dependencies.
---   3. Plugins — installed via vim.pack and configured last.
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
-
-require('config.options')
+-- Entry point. Load order:
+--   1. keymaps -- first, because it sets the leader keys, which must exist
+--      before anything creates a <leader> mapping (it does, and so does every
+--      plugin file).
+--   2. options, autocmds -- independent of each other and of the leader.
+--   3. plugins -- last: installed via vim.pack and configured after the core.
 require('config.keymaps')
+require('config.options')
 require('config.autocmds')
 require('plugins')
