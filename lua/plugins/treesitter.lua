@@ -1,10 +1,39 @@
--- Parser-based syntax highlighting and indentation.
+-- Parser-based syntax highlighting.
 --
 -- nvim-treesitter (main branch) is a thin manager around Neovim's built-in
 -- treesitter: it installs/updates parsers, and the *editor* enables
--- highlighting/indent itself via vim.treesitter.start(). There's no
+-- highlighting itself via vim.treesitter.start(). There's no
 -- setup({ highlight = { enable = true } }) anymore -- that was the old
 -- (pre-rewrite) API.
+
+-- Parsers are pinned to the revisions in nvim-treesitter's own parsers.lua, so
+-- they only need refreshing when the *plugin* changes -- vim.pack.update()
+-- doesn't touch parser binaries. The vim.pack equivalent of lazy.nvim's
+-- `build = ':TSUpdate'`: after this plugin is updated, run update(), which
+-- reloads the pins and rebuilds only the parsers that no longer match.
+-- It's asynchronous; restart afterwards so open buffers pick up new parsers.
+-- Failures are reported, not swallowed: upstream's update() throws for *every*
+-- language if any installed parser lacks its `.revision` record (what an
+-- interrupted install leaves behind), and a fire-and-forget call would hide it.
+-- Registered before vim.pack.add(), as the vim.pack docs advise for hooks.
+vim.api.nvim_create_autocmd('PackChanged', {
+  group = vim.api.nvim_create_augroup('treesitter-parsers-follow-plugin', { clear = true }),
+  callback = function(event)
+    local data = event.data
+    if data.spec.name ~= 'nvim-treesitter' or data.kind ~= 'update' then
+      return
+    end
+
+    require('nvim-treesitter').update():await(function(err)
+      if err then
+        vim.schedule(function()
+          vim.notify('nvim-treesitter: refreshing parsers failed:\n' .. tostring(err), vim.log.levels.ERROR)
+        end)
+      end
+    end)
+  end,
+})
+
 vim.pack.add({
   'https://github.com/nvim-treesitter/nvim-treesitter',
 })
@@ -38,52 +67,17 @@ require('nvim-treesitter').install({
   'yaml',
 })
 
--- One FileType autocmd enables tree-sitter per buffer, guarded so it only
--- does what each language supports:
---   - highlighting, if a parser is installed for the filetype;
---   - tree-sitter indent (experimental upstream), only if the language ships an
---     `indents` query. Go, Vim script and diff don't -- forcing it there left
---     Enter after `{` at column 0 -- so they keep Neovim's own indent script.
--- An autocmd rather than ftplugin/ files on purpose: for `indentexpr`, a
--- config-dir ftplugin (even after/ftplugin) loses to the runtime's indent
--- script, so only a FileType autocmd reliably sets it.
-vim.api.nvim_create_autocmd('FileType', {
-  group = vim.api.nvim_create_augroup('treesitter-start', { clear = true }),
-  callback = function(event)
-    local lang = vim.treesitter.language.get_lang(event.match)
-    if not (lang and vim.treesitter.language.add(lang)) then
-      return
-    end
-
-    vim.treesitter.start(event.buf, lang)
-    if vim.treesitter.query.get(lang, 'indents') then
-      vim.bo[event.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-    end
-  end,
-})
-
--- Note: vim.pack.update() updates the *plugin's code*. It does not touch
--- installed parser binaries -- run :TSUpdate (or
--- require('nvim-treesitter').update()) separately when parsers need it.
-
--- Nag reminder for the above, throttled to once a week. This does NOT hook
--- the plugin's `User TSUpdate` event to detect a real update: that event
--- fires from install()'s no-op path too (i.e. on every single startup),
--- so it can't distinguish "parsers refreshed" from "already had them" --
--- unsuitable as a "last actually updated" signal. Plain elapsed-time
--- throttling is simpler and doesn't depend on that internal behaviour.
-vim.api.nvim_create_autocmd('VimEnter', {
-  group = vim.api.nvim_create_augroup('treesitter-update-reminder', { clear = true }),
-  callback = function()
-    local stamp_file = vim.fn.stdpath('state') .. '/treesitter-update-reminder'
-    local week_in_seconds = 7 * 24 * 60 * 60
-    local last_notified = vim.fn.filereadable(stamp_file) == 1 and tonumber(vim.fn.readfile(stamp_file)[1]) or 0
-
-    if os.time() - last_notified < week_in_seconds then
-      return
-    end
-
-    vim.fn.writefile({ tostring(os.time()) }, stamp_file)
-    vim.notify("It's been a while -- consider running :TSUpdate to refresh treesitter parsers.", vim.log.levels.INFO)
-  end,
-})
+-- Highlighting is switched on per filetype in ftplugin/<filetype>.lua (the
+-- plugin's documented approach): each file calls vim.treesitter.start(), wrapped
+-- in pcall so a filetype whose parser isn't installed yet (first launch) is a
+-- no-op rather than an error. Neovim already starts it itself for lua, markdown
+-- and help. To highlight another language: add its parser above and an
+-- ftplugin/<filetype>.lua containing the same two lines.
+--
+-- Tree-sitter *indent* is deliberately NOT enabled, even though the plugin
+-- offers it (experimental upstream). It re-indents finished code well, but while
+-- typing -- an unclosed `{`, `(` or tag, so the syntax tree has errors -- it
+-- falls back to column 0 where Neovim's own indent scripts get it right. Measured
+-- pressing Enter after an unclosed block: worse in Go, Rust, Vue, JSON, YAML, HTML
+-- and shell, and even in TypeScript object literals, JSX and CSS. A formatter
+-- (<leader>lf) is the better tool for restructuring finished code anyway.
