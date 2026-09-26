@@ -1,6 +1,4 @@
--- Small quality-of-life autocommands. Each gets its own augroup so
--- re-sourcing this file (e.g. via :source during config edits) doesn't
--- stack duplicate autocmds.
+-- Each autocmd has its own augroup so re-sourcing this file doesn't stack duplicates.
 local augroup = vim.api.nvim_create_augroup
 local autocmd = vim.api.nvim_create_autocmd
 

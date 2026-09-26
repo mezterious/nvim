@@ -1,7 +1,6 @@
--- Tree-sitter highlighting; see the note in lua/plugins/treesitter.lua.
+-- See plugins/treesitter.lua.
 pcall(vim.treesitter.start)
 
--- start() clears 'syntax', and Neovim's Ruby indent script reads syntax groups to
--- decide indentation (Enter after `def`/`if`/`do` gave column 0). Restoring it
--- costs nothing visible: tree-sitter highlights win over regex.
+-- start() clears 'syntax', which Neovim's Ruby indent script reads; without it
+-- Enter after `def`/`if`/`do` indents to column 0. Tree-sitter highlights still win.
 vim.bo.syntax = 'ruby'

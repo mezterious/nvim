@@ -1,4 +1,4 @@
--- Installs tools (servers, formatters, debug adapters) via Mason, from one list.
+-- Installs tools (language servers so far) via Mason, from one list.
 --
 -- To add a language server, add its nvim-lspconfig name to BOTH `automatic_enable`
 -- and `ensure_installed`. Forget one and it silently won't start / won't install.
@@ -23,15 +23,6 @@ require('mason-lspconfig').setup({
 
 require('mason-tool-installer').setup({
   ensure_installed = {
-    -- Language servers (nvim-lspconfig names; also add to automatic_enable above)
-    'lua_ls',
-
-    -- Formatters (see plugins/formatting.lua). conform prefers a project-local
-    -- prettier, so this one is only a fallback.
-    'prettier',
-    'stylua',
-
-    -- Debug adapters (see plugins/dap.lua); mason-nvim-dap installs codelldb/delve.
-    'js-debug-adapter',
+    'lua_ls', -- nvim-lspconfig names for servers; also add to automatic_enable
   },
 })

@@ -1,17 +1,11 @@
--- Core keymaps only. Plugin-specific keymaps live next to that plugin's
--- config in lua/plugins/, so this file stays readable as "the base layer".
+-- Core keymaps. Plugin keymaps live in that plugin's file.
 
--- The leader lives here, next to the mappings that use it. Neovim reads it at
--- the moment each mapping is defined, so this file must load before anything
--- else that creates a <leader> mapping -- init.lua loads it first, and every
--- plugin file runs after.
+-- The leader must be set before any <leader> mapping is defined; init.lua loads this first.
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 local map = vim.keymap.set
 
--- Clear search highlight without losing search history (Esc alone in normal
--- mode already does this in 0.12, but explicit is nice to have documented).
 map('n', '<Esc>', '<cmd>nohlsearch<CR>', { desc = 'Clear search highlight' })
 
 -- Window navigation without the <C-w> prefix.
@@ -30,11 +24,8 @@ map('n', '<C-u>', '<C-u>zz', { desc = 'Scroll up, keep cursor centred' })
 map('n', 'n', 'nzzzv', { desc = 'Next search match, keep cursor centred' })
 map('n', 'N', 'Nzzzv', { desc = 'Previous search match, keep cursor centred' })
 
--- Keep the yanked text in the default register when pasting over a
--- visual selection (instead of it being replaced by the deleted text).
+-- Pasting over a selection keeps the yanked text in the register.
 map('v', 'p', '"_dP', { desc = 'Paste without overwriting the unnamed register' })
 
--- Diagnostics. Jumping needs no mapping here: Neovim's built-in `]d` / `[d`
--- (and `]D` / `[D` for last/first) are used as-is. What's displayed for the
--- current line is configured in plugins/lsp.lua (`virtual_lines`).
+-- Diagnostics: jumping uses the built-in `]d` / `[d`.
 map('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic' })

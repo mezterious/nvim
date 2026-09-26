@@ -1,11 +1,10 @@
--- Core editor options. Grouped by concern; each group is small enough to
--- scan, and this is the file to skim when you forget "why did I set that".
+-- Core editor options, grouped by concern.
 local opt = vim.opt
 
 -- UI
 opt.number = true
 opt.relativenumber = true
-opt.signcolumn = 'yes' -- always reserve a column so LSP diagnostics don't cause text to shift
+opt.signcolumn = 'yes' -- reserve the column so diagnostics don't shift text
 opt.cursorline = true
 opt.termguicolors = true
 opt.scrolloff = 8 -- keep context above/below the cursor
@@ -18,7 +17,7 @@ opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 opt.ignorecase = true
 opt.smartcase = true -- ignorecase, unless the search has a capital letter
 
--- Indentation (2 spaces; change per filetype later via ftplugin if needed)
+-- Indentation
 opt.expandtab = true
 opt.shiftwidth = 2
 opt.tabstop = 2
@@ -28,11 +27,11 @@ opt.smartindent = true
 opt.swapfile = false
 opt.backup = false
 opt.undofile = true -- persistent undo across sessions
-opt.updatetime = 250 -- faster CursorHold events, e.g. for diagnostics/hover
+opt.updatetime = 250 -- faster CursorHold events
 
 -- Behaviour
 opt.mouse = 'a'
-opt.clipboard = 'unnamedplus' -- use the system clipboard for all yank/delete/paste
+opt.clipboard = 'unnamedplus' -- use the system clipboard
 opt.completeopt = { 'menuone', 'noselect', 'popup' }
 opt.confirm = true -- ask to save instead of failing a command outright
 opt.inccommand = 'split' -- live preview for :s substitutions
