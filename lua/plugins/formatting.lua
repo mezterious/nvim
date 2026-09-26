@@ -10,21 +10,6 @@ vim.pack.add({
   { src = 'https://github.com/stevearc/conform.nvim', version = vim.version.range('^9.0.0') },
 })
 
--- Tool binaries via mason. The mason copy of prettier is only a fallback:
--- conform prefers a project-local node_modules/.bin/prettier, so each project
--- formats with the version it pins.
-do
-  local registry = require('mason-registry')
-  registry.refresh(function()
-    for _, name in ipairs({ 'prettier', 'stylua' }) do
-      local ok, pkg = pcall(registry.get_package, name)
-      if ok and not pkg:is_installed() then
-        pkg:install()
-      end
-    end
-  end)
-end
-
 local conform = require('conform')
 
 local formatters_by_ft = { lua = { 'stylua' } }

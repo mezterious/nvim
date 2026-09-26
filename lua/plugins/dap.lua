@@ -22,16 +22,6 @@ vim.pack.add({
   'https://github.com/jay-babu/mason-nvim-dap.nvim',
 })
 
-do
-  local registry = require('mason-registry')
-  registry.refresh(function()
-    local ok, pkg = pcall(registry.get_package, 'js-debug-adapter')
-    if ok and not pkg:is_installed() then
-      pkg:install()
-    end
-  end)
-end
-
 -- codelldb (Rust/C/C++) and delve (Go): real mason-nvim-dap handlers exist
 -- for both, so `handlers = {}` is enough to get adapters + sensible
 -- default configurations (including a "debug test" mode for delve) for
