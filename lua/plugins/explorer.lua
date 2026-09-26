@@ -12,6 +12,9 @@ require('nvim-tree').setup({
   diagnostics = {
     enable = true, -- diagnostic indicators in the tree; off by default
   },
+  modified = {
+    enable = true, -- marker on files with unsaved changes; off by default
+  },
 })
 
 vim.keymap.set('n', '<C-n>', '<cmd>NvimTreeToggle<CR>', { desc = 'Toggle file explorer' })
