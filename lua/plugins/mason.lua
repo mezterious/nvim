@@ -14,7 +14,7 @@ vim.pack.add({
 })
 
 local tools = {
-  servers = { 'lua_ls' },
+  servers = { 'lua_ls', 'vtsls', 'vue_ls' },
 }
 
 require('mason').setup()
