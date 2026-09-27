@@ -14,6 +14,14 @@ require('conform').setup({
     vue = prettier,
     json = prettier,
     jsonc = prettier,
+    markdown = prettier,
+  },
+  -- Only format when the project has a prettier config (.prettierrc*,
+  -- prettier.config.*, or a "prettier" key in package.json); .editorconfig alone
+  -- doesn't count. Prettier still honours .editorconfig once it does run.
+  formatters = {
+    prettierd = { require_cwd = true },
+    prettier = { require_cwd = true },
   },
   format_on_save = { timeout_ms = 500 },
 })

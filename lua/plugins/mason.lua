@@ -14,7 +14,7 @@ vim.pack.add({
 })
 
 local tools = {
-  servers = { 'lua_ls', 'vtsls', 'vue_ls' },
+  servers = { 'lua_ls', 'vtsls', 'vue_ls', 'marksman' },
   formatters = { 'prettierd', 'prettier' }, -- used by plugins/formatting.lua
 }
 
