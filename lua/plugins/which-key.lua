@@ -1,0 +1,15 @@
+-- Popup of available keybindings as you type. Labels come from each keymap's
+-- `desc`; the spec only names groups.
+vim.pack.add({
+  'https://github.com/folke/which-key.nvim',
+})
+
+require('which-key').setup({
+  spec = {
+    { '<leader>l', group = 'language' },
+  },
+})
+
+vim.keymap.set('n', '<leader>?', function()
+  require('which-key').show({ global = false })
+end, { desc = 'Buffer-local keymaps' })
