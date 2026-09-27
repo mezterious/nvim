@@ -1,4 +1,4 @@
--- Installs tools (language servers so far) via Mason, from the one table below.
+-- Installs tools (language servers, formatters) via Mason, from the one table below.
 --
 -- To add a language server, add its nvim-lspconfig name to `tools.servers`: it is
 -- then installed and enabled. Per-server overrides go in after/lsp/<name>.lua.
@@ -15,6 +15,7 @@ vim.pack.add({
 
 local tools = {
   servers = { 'lua_ls', 'vtsls', 'vue_ls' },
+  formatters = { 'prettierd', 'prettier' }, -- used by plugins/formatting.lua
 }
 
 require('mason').setup()
