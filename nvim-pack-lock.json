@@ -4,6 +4,10 @@
       "rev": "3543d000dafbc41cc7761d860cfdb24e82154f75",
       "src": "https://github.com/stevearc/conform.nvim"
     },
+    "gitsigns.nvim": {
+      "rev": "070a5d7b985546cc57e1fc61e5bc507fecac6045",
+      "src": "https://github.com/lewis6991/gitsigns.nvim"
+    },
     "lualine.nvim": {
       "rev": "221ce6b2d999187044529f49da6554a92f740a96",
       "src": "https://github.com/nvim-lualine/lualine.nvim"
