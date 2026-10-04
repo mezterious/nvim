@@ -50,6 +50,10 @@
       "rev": "10fc361835c856ba4233ef5ea135b919bf3dce97",
       "src": "https://github.com/MunifTanjim/nui.nvim"
     },
+    "nvim-file-operations": {
+      "rev": "3e1e178861e792eda7e86591114bca4060a64a0a",
+      "src": "https://github.com/Crysthamus/nvim-file-operations"
+    },
     "nvim-lspconfig": {
       "rev": "046b1a797af1effe8e0474b9af9657a3761ec58a",
       "src": "https://github.com/neovim/nvim-lspconfig"

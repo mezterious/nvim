@@ -9,6 +9,10 @@ return {
   -- Upstream's list plus 'vue'.
   filetypes = { 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'vue' },
   settings = {
+    -- Update imports when a file is renamed or moved, without asking (default is
+    -- "prompt"). Needs plugins/nvim-file-operations.lua to tell the server.
+    typescript = { updateImportsOnFileMove = { enabled = 'always' } },
+    javascript = { updateImportsOnFileMove = { enabled = 'always' } },
     vtsls = {
       tsserver = {
         globalPlugins = {
