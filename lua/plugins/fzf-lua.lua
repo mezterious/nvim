@@ -1,7 +1,6 @@
--- Fuzzy finder (fzf-lua, driven by the fzf binary), plus pickers for the LSP
--- results. The 'telescope' profile approximates telescope's look and keybinds;
--- drop it for fzf-lua's own defaults. register_ui_select routes vim.ui.select
--- (code actions etc.) through fzf-lua.
+-- Fuzzy finder (fzf-lua), plus pickers for the LSP results. The 'telescope' profile
+-- approximates telescope's look and keys; drop it for fzf-lua's defaults.
+-- register_ui_select routes vim.ui.select (code actions etc.) through it.
 vim.pack.add({
   'https://github.com/ibhagwan/fzf-lua',
 })

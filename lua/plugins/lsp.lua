@@ -5,6 +5,8 @@ vim.pack.add({
   'https://github.com/neovim/nvim-lspconfig',
 })
 
+local highlight_group = vim.api.nvim_create_augroup('lsp-document-highlight', { clear = true })
+
 -- LSP keymaps that aren't fuzzy-finder pickers (those are in plugins/fzf-lua.lua).
 -- grn and gra are Neovim's own defaults, mapped here to give them a description.
 vim.api.nvim_create_autocmd('LspAttach', {
@@ -24,6 +26,32 @@ vim.api.nvim_create_autocmd('LspAttach', {
         local filter = { bufnr = event.buf }
         vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(filter), filter)
       end, '[T]oggle Inlay [H]ints')
+    end
+
+    -- Highlight other uses of the symbol under the cursor once it rests there.
+    if client and client:supports_method('textDocument/documentHighlight', event.buf) then
+      vim.api.nvim_clear_autocmds({ group = highlight_group, buffer = event.buf })
+      vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+        group = highlight_group,
+        buffer = event.buf,
+        callback = vim.lsp.buf.document_highlight,
+      })
+      vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+        group = highlight_group,
+        buffer = event.buf,
+        callback = vim.lsp.buf.clear_references,
+      })
+    end
+  end,
+})
+
+vim.api.nvim_create_autocmd('LspDetach', {
+  group = vim.api.nvim_create_augroup('lsp-detach', { clear = true }),
+  callback = function(event)
+    local client = vim.lsp.get_client_by_id(event.data.client_id)
+    if client and client:supports_method('textDocument/documentHighlight', event.buf) then
+      vim.api.nvim_buf_call(event.buf, vim.lsp.buf.clear_references)
+      vim.api.nvim_clear_autocmds({ group = highlight_group, buffer = event.buf })
     end
   end,
 })

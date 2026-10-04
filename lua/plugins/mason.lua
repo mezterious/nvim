@@ -1,12 +1,8 @@
--- Installs tools (language servers, formatters) via Mason, from the one table below.
---
--- To add a language server, add its nvim-lspconfig name to `tools.servers`: it is
--- then installed and enabled. Per-server overrides go in after/lsp/<name>.lua.
--- Servers not from Mason (e.g. rust_analyzer, from rustup) need an explicit
--- vim.lsp.enable() instead.
---
--- plugins/lsp.lua loads first: nvim-lspconfig must be on the runtimepath before
--- mason-lspconfig's setup().
+-- Installs tools via Mason from the table below. To add a language server, add its
+-- nvim-lspconfig name to `tools.servers`: it's installed and enabled (overrides go in
+-- after/lsp/<name>.lua). Servers not from Mason (e.g. rust_analyzer, from rustup)
+-- need an explicit vim.lsp.enable(). plugins/lsp.lua loads first: nvim-lspconfig
+-- must be on the runtimepath before mason-lspconfig's setup().
 vim.pack.add({
   'https://github.com/mason-org/mason.nvim',
   'https://github.com/mason-org/mason-lspconfig.nvim',
@@ -26,7 +22,6 @@ require('mason-lspconfig').setup({
   automatic_enable = tools.servers,
 })
 
--- Every section of `tools` gets installed.
 local ensure_installed = {}
 for _, names in pairs(tools) do
   vim.list_extend(ensure_installed, names)

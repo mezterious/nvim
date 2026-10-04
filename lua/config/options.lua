@@ -7,7 +7,7 @@ opt.relativenumber = true
 opt.signcolumn = 'yes' -- reserve the column so diagnostics don't shift text
 opt.cursorline = true
 opt.termguicolors = true
-opt.scrolloff = 8 -- keep context above/below the cursor
+opt.scrolloff = 8
 opt.splitright = true
 opt.splitbelow = true
 opt.list = true
@@ -26,12 +26,12 @@ opt.smartindent = true
 -- Files & undo
 opt.swapfile = false
 opt.backup = false
-opt.undofile = true -- persistent undo across sessions
+opt.undofile = true
 opt.updatetime = 250 -- faster CursorHold events
 
 -- Behaviour
 opt.mouse = 'a'
-opt.clipboard = 'unnamedplus' -- use the system clipboard
+opt.clipboard = 'unnamedplus'
 opt.completeopt = { 'menuone', 'noselect', 'popup' }
 opt.confirm = true -- ask to save instead of failing a command outright
 opt.inccommand = 'split' -- live preview for :s substitutions

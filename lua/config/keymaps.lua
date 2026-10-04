@@ -8,23 +8,19 @@ local map = vim.keymap.set
 
 map('n', '<Esc>', '<cmd>nohlsearch<CR>', { desc = 'Clear search highlight' })
 
--- Window navigation without the <C-w> prefix.
 map('n', '<C-h>', '<C-w>h', { desc = 'Go to left window' })
 map('n', '<C-j>', '<C-w>j', { desc = 'Go to lower window' })
 map('n', '<C-k>', '<C-w>k', { desc = 'Go to upper window' })
 map('n', '<C-l>', '<C-w>l', { desc = 'Go to right window' })
 
--- Move selected lines up/down in visual mode.
 map('v', 'J', ":m '>+1<CR>gv=gv", { desc = 'Move selection down' })
 map('v', 'K', ":m '<-2<CR>gv=gv", { desc = 'Move selection up' })
 
--- Keep cursor centred when jumping half-pages or between search results.
 map('n', '<C-d>', '<C-d>zz', { desc = 'Scroll down, keep cursor centred' })
 map('n', '<C-u>', '<C-u>zz', { desc = 'Scroll up, keep cursor centred' })
 map('n', 'n', 'nzzzv', { desc = 'Next search match, keep cursor centred' })
 map('n', 'N', 'Nzzzv', { desc = 'Previous search match, keep cursor centred' })
 
--- Pasting over a selection keeps the yanked text in the register.
 map('v', 'p', '"_dP', { desc = 'Paste without overwriting the unnamed register' })
 
 -- Diagnostics: jumping uses the built-in `]d` / `[d`.
