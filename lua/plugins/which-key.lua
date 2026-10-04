@@ -6,6 +6,7 @@ vim.pack.add({
 
 require('which-key').setup({
   spec = {
+    { '<leader>f', group = 'find' },
     { '<leader>l', group = 'language' },
     { '<leader>h', group = 'hunks' },
     { '<leader>t', group = 'toggle' },
