@@ -13,8 +13,10 @@ vim.pack.add({
   'https://github.com/nvim-tree/nvim-web-devicons',
 })
 
--- The default hides every dotfile; show them, but keep .git hidden.
+-- The default hides every dotfile; show them, but keep .git hidden. The
+-- source_selector shows the Files / Buffers / Git tabs (`<` and `>` switch them).
 require('neo-tree').setup({
+  source_selector = { winbar = true },
   filesystem = {
     filtered_items = { hide_dotfiles = false, never_show = { '.git' } },
   },
