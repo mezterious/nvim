@@ -15,6 +15,9 @@ require('nvim-tree').setup({
   modified = {
     enable = true, -- marker on files with unsaved changes; off by default
   },
+  filters = {
+    custom = { '^\\.git$' }, -- hide .git only; other dotfiles stay visible. `U` toggles
+  },
 })
 
 vim.keymap.set('n', '<C-n>', '<cmd>NvimTreeToggle<CR>', { desc = 'Toggle file explorer' })
