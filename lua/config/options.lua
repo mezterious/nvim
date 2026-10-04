@@ -6,7 +6,7 @@ opt.number = true
 opt.relativenumber = true
 opt.signcolumn = 'yes' -- reserve the column so diagnostics don't shift text
 opt.cursorline = true
-opt.termguicolors = true
+opt.showmode = false -- the statusline already shows the mode
 opt.scrolloff = 8
 opt.splitright = true
 opt.splitbelow = true
@@ -22,10 +22,10 @@ opt.expandtab = true
 opt.shiftwidth = 2
 opt.tabstop = 2
 opt.smartindent = true
+opt.breakindent = true -- wrapped lines keep the line's indent
 
 -- Files & undo
 opt.swapfile = false
-opt.backup = false
 opt.undofile = true
 opt.updatetime = 250 -- faster CursorHold events
 
