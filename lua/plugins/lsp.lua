@@ -5,7 +5,7 @@ vim.pack.add({
   'https://github.com/neovim/nvim-lspconfig',
 })
 
--- LSP keymaps that aren't telescope pickers (those are in plugins/telescope.lua).
+-- LSP keymaps that aren't fuzzy-finder pickers (those are in plugins/fzf-lua.lua).
 -- grn and gra are Neovim's own defaults, mapped here to give them a description.
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('lsp-attach', { clear = true }),
