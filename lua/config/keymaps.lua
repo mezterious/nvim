@@ -22,6 +22,3 @@ map('n', 'n', 'nzzzv', { desc = 'Next search match, keep cursor centred' })
 map('n', 'N', 'Nzzzv', { desc = 'Previous search match, keep cursor centred' })
 
 map('v', 'p', '"_dP', { desc = 'Paste without overwriting the unnamed register' })
-
--- Diagnostics: jumping uses the built-in `]d` / `[d`.
-map('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic' })

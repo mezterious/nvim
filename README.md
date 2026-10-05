@@ -37,7 +37,7 @@ To try it without touching an existing config, clone to `~/.config/nvim-test` an
 
 ```
 init.lua              load order: keymaps, options, autocmds, plugins
-lua/config/           keymaps (and the leader key), options, autocmds
+lua/config/           core settings: the leader key, keymaps, options and similar
 lua/plugins/          one file per plugin (vim.pack.add + its config); init.lua sets the order
 after/lsp/            per-server overrides on top of nvim-lspconfig's defaults
 ftplugin/             one file per filetype, starts tree-sitter highlighting

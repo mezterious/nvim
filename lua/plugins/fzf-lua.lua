@@ -14,6 +14,9 @@ vim.keymap.set('n', '<leader>ff', fzf.files, { desc = 'Find files' })
 vim.keymap.set('n', '<leader>fg', fzf.live_grep, { desc = 'Live grep' })
 vim.keymap.set('n', '<leader>fb', fzf.buffers, { desc = 'Buffers' })
 vim.keymap.set('n', '<leader>fh', fzf.helptags, { desc = 'Help tags' })
+vim.keymap.set('n', '<leader>fd', fzf.diagnostics_document, { desc = 'Diagnostics (file)' })
+-- Only what the servers have reported: for TypeScript, the files opened this session.
+vim.keymap.set('n', '<leader>fD', fzf.diagnostics_workspace, { desc = 'Diagnostics (opened files)' })
 
 -- Override Neovim's built-in LSP maps (which fill the quickfix list) in LSP
 -- buffers; `gd` and `grd` are both go-to-definition.

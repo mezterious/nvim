@@ -35,3 +35,12 @@ opt.clipboard = 'unnamedplus'
 opt.completeopt = { 'menuone', 'noselect', 'popup' }
 opt.confirm = true -- ask to save instead of failing a command outright
 opt.inccommand = 'split' -- live preview for :s substitutions
+
+-- Diagnostics: a gutter sign and underline (the defaults), and the full message in a float
+-- (see autocmds.lua), never as text at the end of the line. `]d` / `[d` jump between
+-- diagnostics and `<C-w>d` opens the float on demand.
+vim.diagnostic.config({
+  virtual_text = false,
+  severity_sort = true,
+  float = { border = 'rounded', source = 'if_many' },
+})
