@@ -34,6 +34,8 @@ require('nvim-treesitter').install({
   'css',
   'diff',
   'go',
+  'gomod',
+  'gowork',
   'html',
   'javascript',
   'json',

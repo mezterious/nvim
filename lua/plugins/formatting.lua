@@ -15,6 +15,7 @@ require('conform').setup({
     json = prettier,
     jsonc = prettier,
     markdown = prettier,
+    go = { 'goimports' }, -- gofmt's formatting, plus adding and removing imports
   },
   -- Only format when the project has a prettier config (.prettierrc*,
   -- prettier.config.*, or a "prettier" key in package.json); .editorconfig alone
