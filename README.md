@@ -11,9 +11,8 @@ possible. Built and tested on Neovim 0.12.5 (macOS).
   codediff make on first use)
 - [`tree-sitter-cli`](https://github.com/tree-sitter/tree-sitter/blob/master/crates/cli/README.md)
   0.26.1+ (from your package manager, **not npm**) and a C compiler, to build tree-sitter parsers
-- **Node.js**: the language servers, formatters and debug adapter set up in
-  [`lua/plugins/mason.lua`](lua/plugins/mason.lua) run on it. Debugging `.ts` files directly needs
-  Node 22.18+ or 23.6+
+- Whatever toolchains the tools in [`lua/plugins/mason.lua`](lua/plugins/mason.lua) are built or
+  run with (Node.js, Go and so on). `:checkhealth mason` shows which are missing
 - [`fzf`](https://github.com/junegunn/fzf) (newer than 0.36) for the fuzzy finder; `ripgrep` and
   `fd` are recommended by fzf-lua
 - A [Nerd Font](https://www.nerdfonts.com/) for icons
@@ -60,13 +59,18 @@ nvim-pack-lock.json   exact plugin versions (vim.pack's lockfile)
 
 ## Behaviours worth knowing
 
-- **Formatting runs on save, but only in projects with a prettier config** (`.prettierrc*`,
-  `prettier.config.*` or a `prettier` key in `package.json`). A lone `.editorconfig` doesn't
-  count, though prettier honours it once it does run.
-- **oxlint runs only in projects with an oxlint config**, for the same reason.
-- Renaming or moving a file in the explorer updates imports through the language server and saves
-  the files that changed.
-- `.vscode/launch.json` is read automatically when you start a debug session.
+- **Formatting runs on save**, for the filetypes in `formatting.lua`. Prettier only runs in
+  projects with a prettier config (`.prettierrc*`, `prettier.config.*` or a `prettier` key in
+  `package.json`); a lone `.editorconfig` doesn't count, though prettier honours it once it does
+  run. Lua (stylua) likewise needs a `.stylua.toml` or `stylua.toml`. Go (`goimports`) has no
+  config to look for, so it always runs.
+- **oxlint runs only in projects with an oxlint config** (`.oxlintrc.json`, `.oxlintrc.jsonc`,
+  `oxlint.config.ts`, an `oxlint` key in `package.json`, or a vite-plus config).
+- Renaming or moving a file in the explorer updates imports through the language server, when the
+  server supports it, and saves the files that changed.
+- Debug configurations in `dap.lua` are only defaults (debugging `.ts` files directly needs
+  Node 22.18+ or 23.6+). Anything project-specific (arguments, environment, frameworks) belongs in
+  the project's `.vscode/launch.json`, which is read automatically when you start a debug session.
 
 ## Changing it
 
@@ -74,10 +78,11 @@ nvim-pack-lock.json   exact plugin versions (vim.pack's lockfile)
   `lua/plugins/mason.lua`. It is installed and enabled. Overrides go in `after/lsp/<name>.lua`.
 - **Add a formatter:** add it to `tools.formatters` in `mason.lua` and to `formatters_by_ft` in
   `lua/plugins/formatting.lua`.
+- **Add a debug adapter:** add it to `tools.debuggers` in `mason.lua`, then define its
+  `dap.adapters` entry and `dap.configurations` in `lua/plugins/dap.lua`.
 - **Add a tree-sitter language:** add the parser to `lua/plugins/treesitter.lua` and create
   `ftplugin/<filetype>.lua` containing `pcall(vim.treesitter.start)`.
 - **Add a plugin:** create `lua/plugins/<name>.lua` with its `vim.pack.add` and setup, then
   require it in `lua/plugins/init.lua`.
-- **Update plugins:** run `:lua vim.pack.update()`. The lockfile records what is installed.
-
-Lua is formatted with [stylua](https://github.com/JohnnyMorganz/StyLua) (`.stylua.toml`).
+- **Update plugins:** run `:lua vim.pack.update()` and `:write` the review buffer to confirm. The
+  lockfile records what is installed; Mason tools and tree-sitter parsers are not in it.
