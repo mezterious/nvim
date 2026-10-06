@@ -44,6 +44,42 @@ for _, filetype in ipairs({ 'javascript', 'javascriptreact', 'typescript', 'type
   dap.configurations[filetype] = node_configurations
 end
 
+-- Delve speaks DAP itself (`dlv dap`); nvim-dap starts it on a free port per session.
+dap.adapters.delve = {
+  type = 'server',
+  port = '${port}',
+  executable = { command = 'dlv', args = { 'dap', '-l', '127.0.0.1:${port}' }, detached = vim.fn.has('win32') == 0 },
+}
+
+-- The current file's package directory, built from its module root (`dlvCwd`), so it
+-- works from any directory and in repos holding several modules. Not `${file}`, so
+-- code split across files in a package builds. nvim-dap calls function values at launch.
+local function go_package_dir()
+  return vim.fs.dirname(vim.api.nvim_buf_get_name(0))
+end
+
+local function go_module_root()
+  return vim.fs.root(0, 'go.mod') or vim.fn.getcwd()
+end
+
+dap.configurations.go = {
+  {
+    type = 'delve',
+    request = 'launch',
+    name = 'Go: debug package',
+    program = go_package_dir,
+    dlvCwd = go_module_root,
+  },
+  {
+    type = 'delve',
+    request = 'launch',
+    name = 'Go: debug package tests',
+    mode = 'test',
+    program = go_package_dir,
+    dlvCwd = go_module_root,
+  },
+}
+
 local function map(lhs, rhs, desc, mode)
   vim.keymap.set(mode or 'n', lhs, rhs, { desc = desc })
 end

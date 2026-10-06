@@ -12,7 +12,7 @@ vim.pack.add({
 local tools = {
   servers = { 'gopls', 'lua_ls', 'vtsls', 'vue_ls', 'marksman', 'oxlint' },
   formatters = { 'prettierd', 'prettier', 'goimports' }, -- used by plugins/formatting.lua
-  debuggers = { 'js-debug-adapter' }, -- used by plugins/dap.lua
+  debuggers = { 'js-debug-adapter', 'delve' }, -- used by plugins/dap.lua
 }
 
 require('mason').setup()
