@@ -1,4 +1,5 @@
--- Statusline. The defaults are enough; only the theme is set, to match the colorscheme.
+-- Statusline. The defaults are enough, except the theme (to match the colorscheme)
+-- and the file component, which shows the path relative to the working directory.
 vim.pack.add({
   'https://github.com/nvim-lualine/lualine.nvim',
 })
@@ -6,5 +7,8 @@ vim.pack.add({
 require('lualine').setup({
   options = {
     theme = 'tokyonight-moon',
+  },
+  sections = {
+    lualine_c = { { 'filename', path = 1 } },
   },
 })
