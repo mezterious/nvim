@@ -1,5 +1,5 @@
--- Parser-based syntax highlighting. nvim-treesitter (main branch) only installs and
--- updates parsers; highlighting is started per filetype in ftplugin/.
+-- Parser-based syntax highlighting and folding. nvim-treesitter (main branch) only
+-- installs and updates parsers; both are switched on per filetype in ftplugin/.
 
 -- Refresh parsers when the plugin updates (the vim.pack equivalent of
 -- `build = ':TSUpdate'`). Errors are reported: upstream's update() throws for every
@@ -56,8 +56,10 @@ require('nvim-treesitter').install({
   'yaml',
 })
 
--- Highlighting starts per filetype in ftplugin/<filetype>.lua. To add a language, add
--- its parser above and an ftplugin file (Neovim starts lua, markdown and help itself).
+-- Highlighting and folding are set per filetype in ftplugin/<filetype>.lua, as the
+-- nvim-treesitter README advises. To add a language, add its parser above and an ftplugin
+-- file (Neovim starts lua, markdown and help highlighting itself). A language server that
+-- provides fold ranges takes over folding (see config/autocmds.lua).
 --
 -- Tree-sitter indent is deliberately off: unfinished code has syntax errors, so it
 -- falls back to column 0 where Neovim's own indent scripts do better.
