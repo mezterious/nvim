@@ -10,7 +10,8 @@ possible. Targets Neovim 0.12+; developed on macOS.
 - `git`, `curl`, `tar`, `unzip` and `gzip`
 - [`tree-sitter-cli`](https://github.com/tree-sitter/tree-sitter/blob/master/crates/cli/README.md)
   (from your package manager, **not npm**) and a C compiler, to build tree-sitter parsers
-- [`fzf`](https://github.com/junegunn/fzf); `ripgrep` and `fd` are recommended
+- [`fzf`](https://github.com/junegunn/fzf) and [`ripgrep`](https://github.com/BurntSushi/ripgrep)
+  (used for finding and replacing); `fd` is recommended
 - The toolchains the tools in [`lua/plugins/mason.lua`](lua/plugins/mason.lua) are built or run
   with (Node.js, Go and so on)
 - A [Nerd Font](https://www.nerdfonts.com/) for icons
