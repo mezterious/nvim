@@ -24,6 +24,9 @@ opt.tabstop = 2
 opt.smartindent = true
 opt.breakindent = true -- wrapped lines keep the line's indent
 
+-- Folding is switched on per filetype (ftplugin/); this only sets the starting level.
+opt.foldlevelstart = 99 -- open files fully unfolded
+
 -- Files & undo
 opt.swapfile = false
 opt.undofile = true

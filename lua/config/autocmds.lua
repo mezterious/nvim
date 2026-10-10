@@ -38,3 +38,14 @@ autocmd('CursorHold', {
     vim.diagnostic.open_float({ bufnr = event.buf, scope = 'line', focus = false })
   end,
 })
+
+autocmd('LspAttach', {
+  group = augroup('lsp-folding', { clear = true }),
+  desc = "Fold with the server's ranges when it provides them (else tree-sitter, see options.lua)",
+  callback = function(event)
+    local client = vim.lsp.get_client_by_id(event.data.client_id)
+    if client and client:supports_method('textDocument/foldingRange') then
+      vim.wo[vim.api.nvim_get_current_win()][0].foldexpr = 'v:lua.vim.lsp.foldexpr()'
+    end
+  end,
+})
