@@ -22,3 +22,7 @@ map('n', 'n', 'nzzzv', { desc = 'Next search match, keep cursor centred' })
 map('n', 'N', 'Nzzzv', { desc = 'Previous search match, keep cursor centred' })
 
 map('v', 'p', '"_dP', { desc = 'Paste without overwriting the unnamed register' })
+
+-- Step out of auto-closed pairs. <C-l> has no meaning in insert mode (checked against
+-- :help insert-index), unlike <C-e>, which inserts the character below the cursor.
+map('i', '<C-l>', '<End>', { desc = 'End of line' })
