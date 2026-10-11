@@ -17,6 +17,7 @@ require('conform').setup({
     markdown = prettier,
     go = { 'goimports' }, -- gofmt's formatting, plus adding and removing imports
     lua = { 'stylua' },
+    rust = { 'rustfmt' }, -- from rustup; needs no config
   },
   -- Only format when the project has a prettier config (.prettierrc*,
   -- prettier.config.*, or a "prettier" key in package.json); .editorconfig alone

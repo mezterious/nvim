@@ -1,9 +1,12 @@
 -- nvim-lspconfig supplies default lsp/<name>.lua server configs (data only);
 -- override per server in after/lsp/<name>.lua. Installing and enabling servers
--- is in plugins/mason.lua.
+-- is in plugins/mason.lua, except those installed outside Mason, enabled below.
 vim.pack.add({
   'https://github.com/neovim/nvim-lspconfig',
 })
+
+-- From rustup (`rustup component add rust-analyzer`), so it matches the toolchain.
+vim.lsp.enable('rust_analyzer')
 
 local highlight_group = vim.api.nvim_create_augroup('lsp-document-highlight', { clear = true })
 
